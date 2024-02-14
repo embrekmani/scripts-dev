@@ -2,12 +2,12 @@ import sharp from 'sharp';
 import fs from 'fs';
 import path from 'path';
 
-const convertImage = async (inputPath: string): Promise<void> => {
+const convertImage = async (input: string): Promise<void> => {
     try {
         // extract directory
-        const dir = path.dirname(inputPath)
+        const dir = path.dirname(input)
         // remove file extension
-        const name = path.basename(inputPath, path.extname(inputPath));
+        const name = path.basename(input, path.extname(input));
 
         const output = path.join(dir, `${name}.png`);
 
@@ -22,16 +22,16 @@ const convertImage = async (inputPath: string): Promise<void> => {
     }
 };
 
-const convertFolder = async (inputDir: string): Promise<void> => {
-    const outputDir = path.join(inputDir, '/jpg-to-png/');
+const convertFolder = async (input: string): Promise<void> => {
+    const dir = path.join(input, '/jpg-to-png/');
 
     // create the output directory if it does not exist
-    if (!fs.existsSync(outputDir)) {
-        fs.mkdirSync(outputDir);
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir);
     }
 
     // read the contents of the input directory
-    fs.readdir(inputDir, (err, files) => {
+    fs.readdir(input, (err, files) => {
         if (err) {
             console.error('Error reading input directory:', err);
             return;
@@ -42,11 +42,11 @@ const convertFolder = async (inputDir: string): Promise<void> => {
 
         // process each image file
         imageFiles.forEach(file => {
-            const inputPath = path.join(inputDir, file);
-            const outputPath = path.join(outputDir, `${path.parse(file).name}.png`);
+            const image = path.join(input, file);
+            const outputPath = path.join(dir, `${path.parse(file).name}.png`);
 
             // convert and save the image
-            sharp(inputPath)
+            sharp(image)
                 .png()
                 .toFile(outputPath)
                 .then(() => console.log(`${file} converted to PNG.`))
